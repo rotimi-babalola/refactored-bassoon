@@ -1,0 +1,19 @@
+{
+  "name": "refactored-bassoon",
+  "version": "1.0.0",
+  "description": "Frontend for uploading files to S3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rotimi-babalola/refactored-bassoon.git"
+  },
+  "author": "Rotimi Babalola",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rotimi-babalola/refactored-bassoon/issues"
+  },
+  "homepage": "https://github.com/rotimi-babalola/refactored-bassoon#readme"
+}
