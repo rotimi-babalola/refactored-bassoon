@@ -1,0 +1,12 @@
+name: CI/CD
+
+on: push
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Run lint test
+        run: yarn lint
