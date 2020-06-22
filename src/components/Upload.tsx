@@ -5,7 +5,7 @@ import {
   createStyles,
   makeStyles,
 } from '@material-ui/core';
-import uploadFile from '../utils/uploadFile';
+import uploadFile from '../hooks/useFileUpload';
 
 const useStyles = makeStyles(() =>
   createStyles({
