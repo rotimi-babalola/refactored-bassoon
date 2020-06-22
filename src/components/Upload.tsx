@@ -5,7 +5,7 @@ import {
   createStyles,
   makeStyles,
 } from '@material-ui/core';
-import useUploadFile from '../hooks/useUploadFile';
+import uploadFile from '../utils/uploadFile';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -31,7 +31,7 @@ const Upload = () => {
   };
 
   const handleUpload = () => {
-    useUploadFile(files);
+    uploadFile(files);
   };
 
   return (

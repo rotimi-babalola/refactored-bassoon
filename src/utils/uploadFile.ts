@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const useUploadFile = async (files: File[]) => {
+const uploadFile = async (files: File[]) => {
   const firstFile = files[0];
 
   const response = await axios.post('http://localhost:4000/signS3', {
@@ -27,4 +27,4 @@ const useUploadFile = async (files: File[]) => {
   }
 };
 
-export default useUploadFile;
+export default uploadFile;
