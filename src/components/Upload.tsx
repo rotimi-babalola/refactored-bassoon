@@ -1,11 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import {
   Button,
   Typography,
   createStyles,
   makeStyles,
 } from '@material-ui/core';
-import uploadFile from '../hooks/useFileUpload';
+import { v4 as uuid } from 'uuid';
+import { useDispatch } from 'react-redux';
+import { addFiles } from '../store/actions';
+import { FileStatus } from '../store/types';
+import { useSelector } from '../store/index';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -18,20 +22,27 @@ const useStyles = makeStyles(() =>
 const Upload = () => {
   const classes = useStyles();
   const inputRef = useRef(null);
-  const [files, setFiles] = useState<File[]>();
+  const dispatch = useDispatch();
+  const { files } = useSelector(state => state);
 
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    // array of object to stored dropped files
+  const handleOnChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const droppedFiles = [];
+
     for (let i = 0; i < evt.target.files.length; i++) {
       droppedFiles.push(evt.target.files.item(i));
     }
 
-    setFiles(droppedFiles);
-  };
-
-  const handleUpload = () => {
-    uploadFile(files);
+    dispatch(
+      addFiles(
+        droppedFiles.map(file => ({
+          blob: new Blob([file], { type: file.type }),
+          progress: 0,
+          name: file.name,
+          tempId: uuid(),
+          status: FileStatus.waiting,
+        })),
+      ),
+    );
   };
 
   return (
@@ -45,7 +56,7 @@ const Upload = () => {
             style={{ display: 'none' }}
             multiple
             ref={inputRef}
-            onChange={handleChange}
+            onChange={handleOnChange}
           />
           <Button
             variant="contained"
@@ -60,14 +71,23 @@ const Upload = () => {
           variant="contained"
           color="primary"
           component="span"
-          onClick={handleUpload}
-          disabled={!files}
+          onClick={() => {}}
+          disabled={files.length === 0}
         >
           Upload to S3
         </Button>
       </div>
       {files ? (
-        files.map(file => <Typography key={file.name}>{file.name}</Typography>)
+        files.map(file => (
+          <Typography
+            key={file.tempId}
+            style={{ maxWidth: '200px' }}
+            noWrap
+            title={file.name}
+          >
+            {file.name}
+          </Typography>
+        ))
       ) : (
         <Typography>No files</Typography>
       )}

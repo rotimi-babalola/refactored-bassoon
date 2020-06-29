@@ -1,31 +1,37 @@
-/* eslint-disable no-console */
-import axios from 'axios';
+// import { useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
+import { useDispatch } from 'react-redux';
+import { addFiles } from '../store/actions';
+import { FileStatus } from '../store/types';
 
-const uploadFile = async (files: File[]) => {
-  const firstFile = files[0];
+const useFileUpload = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const dispatch = useDispatch();
 
-  const response = await axios.post('http://localhost:4000/signS3', {
-    fileName: firstFile.name,
-    fileType: firstFile.type,
-  });
+  const handleEvent = () => {
+    const droppedFiles = [];
 
-  const returnData = response.data.data;
-  const { signedRequest } = returnData;
+    for (let i = 0; i < evt.target.files.length; i++) {
+      droppedFiles.push(evt.target.files.item(i));
+    }
 
-  const options = {
-    headers: {
-      'Content-Type': firstFile.type,
-    },
+    dispatch(
+      addFiles(
+        droppedFiles.map(file => ({
+          blob: new Blob([file], { type: file.type }),
+          progress: 0,
+          name: file.name,
+          tempId: uuid(),
+          status: FileStatus.waiting,
+        })),
+      ),
+    );
   };
 
-  try {
-    const result = await axios.put(signedRequest, firstFile, options);
-    if (result.status === 200) {
-      console.log('Success');
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  return handleEvent;
+
+  // useEffect(() => {
+  //   handleEvent();
+  // }, []);
 };
 
-export default uploadFile;
+export default useFileUpload;
